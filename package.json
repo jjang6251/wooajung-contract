@@ -1,0 +1,29 @@
+{
+  "name": "wooajung-contract",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jjang6251/wooajung-contract.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jjang6251/wooajung-contract/issues"
+  },
+  "homepage": "https://github.com/jjang6251/wooajung-contract#readme",
+  "devDependencies": {
+    "hardhat": "^2.28.6"
+  },
+  "dependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^7.0.0",
+    "@openzeppelin/contracts": "^5.6.1",
+    "dotenv": "^17.3.1",
+    "ethers": "^6.16.0"
+  }
+}
