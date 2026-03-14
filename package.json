@@ -19,7 +19,8 @@
   "homepage": "https://github.com/jjang6251/wooajung-contract#readme",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^6.1.2",
-    "hardhat": "^2.28.6"
+    "hardhat": "^2.28.6",
+    "hardhat-gas-reporter": "^2.3.0"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^5.6.1",
