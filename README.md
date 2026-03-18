@@ -20,37 +20,44 @@ WUSDT 기반 탈중앙화 에스크로 스마트 컨트랙트.
 
 ## 거래 구조
 
-```
-  구매자 (Buyer)                 에스크로 컨트랙트                  판매자 (Seller)
-       │                               │                               │
-       │──── createEscrow() ──────────▶│                               │
-       │──── deposit() ───────────────▶│                               │
-       │         WUSDT 예치            │                               │
-       │                               │                               │
-       │                    ┌──────────┴──────────┐                    │
-       │               정상 흐름              분쟁 발생                 │
-       │                    │                     │                    │
-       │                    │          openDispute() (양측)            │
-       │                    │                     │                    │
-       │  confirmDelivery() │              ┌──────┴──────┐             │
-       │◀───────────────────┤         구매자 합의    7일 타임락 초과    │
-       │                    │  confirmDelivery()  releaseFunds()        │
-       │                    │              └──────┬──────┘             │
-       │                    │                     │                    │
-       │                    └──────────┬──────────┘                    │
-       │                               │                               │
-       │                        RELEASED 상태                          │
-       │                               │──── WUSDT 지급 ─────────────▶│
-       │                               │                               │
-       │                   ─ ─ ─ ─ ─ ─│─ ─ ─ ─ ─ ─ ─ ─               │
-       │                               │                               │
-       │◀──── WUSDT 반환 ──────────────│  refund() (판매자 동의)        │
-       │                         REFUNDED 상태                         │
-       │                               │                               │
-       │◀──── WUSDT 반환 ──────────────│  cancelEscrow()               │
-       │                         CANCELLED 상태                        │
-```
+```mermaid
+sequenceDiagram
+    participant B as 구매자 (Buyer)
+    participant E as 에스크로 컨트랙트
+    participant S as 판매자 (Seller)
 
+    B->>E: createEscrow()
+    B->>E: deposit() [WUSDT 예치]
+
+    alt 정상 흐름
+        B->>E: confirmDelivery()
+        E-->>E: RELEASED 상태
+        E->>S: WUSDT 지급
+    else 분쟁 발생
+        B->>E: openDispute()
+        Note over B,S: 양측 분쟁 개시
+
+        alt 구매자 합의
+            B->>E: confirmDelivery()
+        else 7일 타임락 초과
+            E-->>E: releaseFunds()
+        end
+
+        E-->>E: RELEASED 상태
+        E->>S: WUSDT 지급
+    end
+
+    opt 판매자 동의 환불
+        E->>B: refund() → WUSDT 반환
+        E-->>E: REFUNDED 상태
+    end
+
+    opt 에스크로 취소
+        E->>B: cancelEscrow() → WUSDT 반환
+        E-->>E: CANCELLED 상태
+    end
+
+```
 ---
 
 ## 컨트랙트 구조
